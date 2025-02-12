@@ -6,11 +6,27 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({
+  recommendedConfig: { extends: ["eslint:recommended"] }, // Оставляем только здесь
   baseDirectory: __dirname,
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.extends(
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+  ),
+  {
+    rules: {
+      "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "jsx-a11y/anchor-is-valid": "off",
+      "prettier/prettier": "warn",
+    },
+  },
 ];
 
 export default eslintConfig;
