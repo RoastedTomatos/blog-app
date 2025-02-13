@@ -1,11 +1,11 @@
+import { Header } from "./components/Header";
+import { PostList } from "./components/PostList";
+
 export default function BlogPage() {
   return (
     <main>
-      <header>
-        <nav>
-          <h1>My Blog</h1>
-        </nav>
-      </header>
+      <Header />
+      <PostList />
     </main>
   );
 }
