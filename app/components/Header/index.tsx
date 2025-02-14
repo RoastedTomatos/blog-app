@@ -12,12 +12,6 @@ export const Header = () => {
           <li>Sign Up</li>
         </ul>
       </nav>
-      <form>
-        <input placeholder="Search for something"></input>
-      </form>
-      <div>
-        <button>Filter by</button>
-      </div>
     </StyledHeader>
   );
 };

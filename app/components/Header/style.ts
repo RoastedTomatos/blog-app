@@ -35,40 +35,4 @@ export const StyledHeader = styled.header`
     align-self: center;
     font-size: 20px;
   }
-
-  form {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    margin-top: 40px;
-  }
-
-  input {
-    min-width: 400px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 20px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-  }
-
-  button {
-    font-family: "Merriweather";
-    font-size: 20px;
-    padding: 10px 20px;
-    background: white;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-    border: 1px solid lightgray;
-  }
 `;

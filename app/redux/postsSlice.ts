@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Post {
   id: number;
@@ -18,45 +18,69 @@ const initialState: PostsState = {
   error: null,
 };
 
-export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_POSTS_API_URL}/posts`,
-  );
+export const fetchPosts = createAsyncThunk<Post[]>(
+  "posts/fetchPosts",
+  async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_POSTS_API_URL}/posts`,
+    );
 
-  if (!response.ok) {
-    throw new Error("Network response error");
-  }
+    if (!response.ok) {
+      throw new Error("Network response error");
+    }
 
-  return await response.json();
-});
+    return await response.json();
+  },
+);
+
+export const createPost = createAsyncThunk<Post, Omit<Post, "id">>(
+  "posts/createPost",
+  async (newPost, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_POSTS_API_URL}/posts`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newPost),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create post");
+      }
+
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 const postsSlice = createSlice({
   name: "posts",
   initialState,
-  reducers: {
-    addPost: (state, action: { payload: Post }) => {
-      state.posts.push(action.payload);
-    },
-    setError: (state, action: { payload: string }) => {
-      state.error = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchPosts.fulfilled, (state, action) => {
+      .addCase(fetchPosts.fulfilled, (state, action: PayloadAction<Post[]>) => {
         state.loading = false;
         state.posts = action.payload;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed!";
+      })
+      .addCase(createPost.fulfilled, (state, action: PayloadAction<Post>) => {
+        state.posts.push(action.payload);
+      })
+      .addCase(createPost.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
   },
 });
-
-export const { addPost, setError } = postsSlice.actions;
 
 export default postsSlice.reducer;
